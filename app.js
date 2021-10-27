@@ -23,7 +23,7 @@ connection.connect(function(err){
 function prompts() {
     inquirer
         .prompt({
-            name: 'action',
+            name: 'choice',
             type: 'list',
             message: 'Employee database, what shall we do?',
             choices: [
@@ -38,5 +38,21 @@ function prompts() {
                 'exit'
             ]
         })
-    
-}
+        .then(function (selected) {
+            switch (selected.choice) {
+                case 'View all employees':
+                    viewEmployees();
+                    break;
+            }
+        })
+};
+
+function viewEmployees() {
+    const query = 'SELECT * FROM employee';
+    connection.query(query, function(err, res) {
+        if (err) throw err;
+        console.log(res.length + 'workers found');
+        console.table('All employees:', res);
+        prompts();
+    })
+};
