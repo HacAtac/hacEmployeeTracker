@@ -1,14 +1,14 @@
-var inquirer = require('inquirer');
+const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const cTable = require('console.table');
-const { urlToHttpOptions } = require('url');
+
 
 
 
 // connection to sql db
 const connection = mysql.createConnection({
     host: 'localhost',
-    port: 3306,
+    port: 3305,
     user: 'root',
     password: 'Chiefy21!',
     database: 'employee_tracker_db'
