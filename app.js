@@ -60,6 +60,9 @@ function prompts() {
                 case 'Add an employee':
                     addEmployee();
                     break;
+                case 'exit':
+                    endApplication();
+                    break;
             }
         })
 };
@@ -225,3 +228,14 @@ function addEmployee() {
             })
     })
 };
+
+
+
+
+
+
+
+
+function endApplication() {
+    connection.end();
+}
