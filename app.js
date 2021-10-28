@@ -1,6 +1,7 @@
 var inquirer = require('inquirer');
 const mysql = require('mysql2');
 const cTable = require('console.table');
+const { urlToHttpOptions } = require('url');
 
 
 
@@ -46,6 +47,9 @@ function prompts() {
                 case 'View all departments':
                     viewDepartments();
                     break;
+                case 'View all roles':
+                    viewRole();
+                    break;
             }
         })
 };
@@ -65,6 +69,15 @@ function viewDepartments() {
     connection.query(query, function(err, res) {
         if (err) throw err;
         console.table('All Departments:', res);
+        prompts();
+    })
+};
+
+function viewRole() {
+    const query = 'SELECT * FROM role';
+    connection.query(query, function(err, res) {
+        if (err) throw err;
+        console.table('All Roles:', res);
         prompts();
     })
 };
