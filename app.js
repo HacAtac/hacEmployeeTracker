@@ -43,16 +43,28 @@ function prompts() {
                 case 'View all employees':
                     viewEmployees();
                     break;
+                case 'View all departments':
+                    viewDepartments();
+                    break;
             }
         })
 };
-
+// function for all employees utilizing mysql 2 SELECT * FROM employeeand res.length 
 function viewEmployees() {
     const query = 'SELECT * FROM employee';
     connection.query(query, function(err, res) {
         if (err) throw err;
         console.log(res.length + 'workers found');
         console.table('All employees:', res);
+        prompts();
+    })
+};
+
+function viewDepartments() {
+    const query = 'SELECT * FROM department';
+    connection.query(query, function(err, res) {
+        if (err) throw err;
+        console.table('All Departments:', res);
         prompts();
     })
 };
