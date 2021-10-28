@@ -63,12 +63,13 @@ function prompts() {
                 case 'exit':
                     endApplication();
                     break;
+                
             }
         })
 };
 // function for all employees utilizing mysql 2 SELECT * FROM employeeand res.length 
 function viewEmployees() {
-    const query = 'SELECT * FROM employee';
+    const query = 'SELECT e.id, e.first_name, e.last_name, d.name AS department, r.title, r.salary, CONCAT_WS(" ", m.first_name, m.last_name) AS manager FROM employee e LEFT JOIN employee m ON m.id = e.manager_id INNER JOIN role r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id ORDER BY e.id ASC';
     connection.query(query, function(err, res) {
         if (err) throw err;
         console.log(res.length + 'workers found');
@@ -87,7 +88,7 @@ function viewDepartments() {
 };
 
 function viewRole() {
-    const query = 'SELECT * FROM role';
+    const query = "SELECT  r.id, r.title, r.salary, d.name as Department_Name FROM role AS r INNER JOIN department AS d ON r.department_id = d.id";
     connection.query(query, function(err, res) {
         if (err) throw err;
         console.table('All Roles:', res);
@@ -228,6 +229,7 @@ function addEmployee() {
             })
     })
 };
+
 
 
 
