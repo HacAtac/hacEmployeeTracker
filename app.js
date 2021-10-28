@@ -8,7 +8,7 @@ const cTable = require('console.table');
 // connection to sql db
 const connection = mysql.createConnection({
     host: 'localhost',
-    port: 3305,
+    //port: 3305,
     user: 'root',
     password: 'Chiefy21!',
     database: 'employee_tracker_db'
@@ -50,6 +50,9 @@ function prompts() {
                 case 'View all roles':
                     viewRole();
                     break;
+                case 'Add a department':
+                    addDepartment();
+                    break;
             }
         })
 };
@@ -80,4 +83,30 @@ function viewRole() {
         console.table('All Roles:', res);
         prompts();
     })
+};
+
+function addDepartment() {
+    inquirer
+        .prompt([
+            {
+                name: 'newDepartment',
+                type: 'input',
+                message: 'What department do you want to add?'
+            }
+        ])
+        .then(function (selected) {
+            connection.query(
+                'INSERT INTO department SET ?',
+                {
+                    name: selected.newDepartment
+                });
+
+        const query = 'SELECT * FROM department';
+        connection.query(query, function(err, res) {
+            if(err)throw err;
+            console.log('New department added!');
+            console.table('All Departments:', res);
+            prompts();
+        })
+        })
 };
