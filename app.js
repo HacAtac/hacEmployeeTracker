@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const cTable = require('console.table');
+const { urlToHttpOptions } = require('url');
 
 
 
@@ -52,6 +53,12 @@ function prompts() {
                     break;
                 case 'Add a department':
                     addDepartment();
+                    break;
+                case 'Add a role':
+                    addRole();
+                    break;
+                case 'Add an employee':
+                    addEmployee();
                     break;
             }
         })
@@ -109,4 +116,112 @@ function addDepartment() {
             prompts();
         })
         })
+};
+
+function addRole() {
+    connection.query('SELECT * FROM department', function(err, res) {
+        if (err) throw err;
+
+        inquirer
+            .prompt([
+                {
+                    name: 'new_role',
+                    type: 'input',
+                    message: "What role to add?"
+                },
+                {
+                    name: 'salary',
+                    type: 'input',
+                    message: 'What salary does this role make?'
+                },
+                {
+                    name: 'Department',
+                    type: 'list',
+                    choices: function() {
+                        let departmentStorage = [];
+                        for (let i = 0; i < res.length; i++) {
+                            departmentStorage.push(res[i].name);
+                        }
+                        return departmentStorage;
+
+                    },
+                }
+            ])
+            .then(function (selected) {
+                let department_id;
+                for (let x = 0; x < res.length; x++) {
+                    if (res[x].name == selected.Department) {
+                        department_id = res[x].id;
+                    }
+                }
+                connection.query(
+                    'INSERT INTO role SET ?',
+                    {
+                        title: selected.new_role,
+                        salary: selected.salary,
+                        department_id: department_id
+                    },
+                    function (err, res) {
+                        if(err)throw err;
+                        console.log('New role added!');
+                        console.table('All Roles:', res);
+                        prompts();
+                    }
+                )
+            })
+    })
+};
+
+function addEmployee() {
+    connection.query('SELECT * FROM role', function (err, res) {
+        if (err) throw err;
+        inquirer
+            .prompt([
+                {
+                    name: 'first_name',
+                    type: 'input',
+                    message: 'What is employee first name?'
+                },
+                {
+                    name: 'last_name',
+                    type: 'input',
+                    message: 'What is employyee last name?'
+                },
+                {
+                    name: 'role',
+                    type: 'list',
+                    choices: function() {
+                        let roleData = [];
+                        for (let i = 0; i < res.length; i++) {
+                            roleData.push(res[i].title);
+                        }
+                        return roleData;
+                    },
+                    message: 'What is employee role?'
+                }
+            ])
+            .then(function (selected) {
+                let role_id;
+                for (let x = 0; x < res.length; x++) {
+                    if (res[x].title == selected.role) {
+                        role_id = res[x].id;
+                        console.log(role_id)
+                    }
+                }
+                connection.query(
+                    'INSERT INTO employee SET ?',
+                    {
+                        first_name: selected.first_name,
+                        last_name: selected.last_name,
+                        manager_id: selected.manager_id,
+                        role_id: role_id,
+                    },
+                    function (err) {
+                        if (err) throw err;
+                        console.log('Employee Added!');
+                        prompts();
+                    }
+                )
+            })
+    })
 };
