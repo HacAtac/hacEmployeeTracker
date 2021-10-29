@@ -38,6 +38,7 @@ function prompts() {
                 'Update employee role',
                 'Delete an employee',
                 'Delete a department',
+                'Delete a role',
                 'exit'
             ]
         })
@@ -69,6 +70,9 @@ function prompts() {
                     break;
                 case 'Delete a department':
                     deleteDepartment();
+                    break;
+                case 'Delete a role':
+                    deleteRole();
                     break;
                 
             }
@@ -337,6 +341,47 @@ function deleteDepartment() {
                     function (err) {
                         if (err) throw err;
                         console.log('Department deleted!');
+                        prompts();
+                    }
+                )
+            })
+    })
+};
+
+//function to delete a role from database
+function deleteRole() {
+    connection.query('SELECT * FROM role', function (err, res) {
+        if (err) throw err;
+        inquirer
+            .prompt([
+                {
+                    name: 'role',
+                    type: 'list',
+                    choices: function() {
+                        let roleData = [];
+                        for (let i = 0; i < res.length; i++) {
+                            roleData.push(res[i].title);
+                        }
+                        return roleData;
+                    },
+                    message: 'Which role would you like to delete?'
+                }
+            ])
+            .then(function (selected) {
+                let role_id;
+                for (let x = 0; x < res.length; x++) {
+                    if (res[x].title == selected.role) {
+                        role_id = res[x].id;
+                    }
+                }
+                connection.query(
+                    'DELETE FROM role WHERE ?',
+                    {
+                        id: role_id
+                    },
+                    function (err) {
+                        if (err) throw err;
+                        console.log('Role deleted!');
                         prompts();
                     }
                 )
