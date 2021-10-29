@@ -74,6 +74,9 @@ function prompts() {
                 case 'Delete a role':
                     deleteRole();
                     break;
+                case 'Delete an employee':
+                    deleteEmployee();
+                    break;
                 
             }
         })
@@ -388,6 +391,49 @@ function deleteRole() {
             })
     })
 };
+
+//function to delete an employee from database
+function deleteEmployee() {
+    connection.query('SELECT * FROM employee', function (err, res) {
+        if (err) throw err;
+        inquirer
+            .prompt([
+                {
+                    name: 'employee',
+                    type: 'list',
+                    choices: function() {
+                        let employeeData = [];
+                        for (let i = 0; i < res.length; i++) {
+                            employeeData.push(res[i].first_name + ' ' + res[i].last_name);
+                        }
+                        return employeeData;
+                    },
+                    message: 'Which employee would you like to delete?'
+                }
+            ])
+            .then(function (selected) {
+                let employee_id;
+                for (let x = 0; x < res.length; x++) {
+                    if (res[x].first_name + ' ' + res[x].last_name == selected.employee) {
+                        employee_id = res[x].id;
+                    }
+                }
+                connection.query(
+                    'DELETE FROM employee WHERE ?',
+                    {
+                        id: employee_id
+                    },
+                    function (err) {
+                        if (err) throw err;
+                        console.log('Employee deleted!');
+                        prompts();
+                    }
+                )
+            })
+    })
+};
+
+
 
 
                 
