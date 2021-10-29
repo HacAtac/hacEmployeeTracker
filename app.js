@@ -81,19 +81,28 @@ function prompts() {
     });
 }
 
-//function to view all employees and shows employee id, first name, last name, job title, departments, salary,
-
-// function for all employees utilizing mysql 2 SELECT * FROM employeeand res.length
+//function to view all employees and shows employee id, first name, last name, job title, departments, salary, and manager
 function viewEmployees() {
   const query =
-    'SELECT e.id, e.first_name, e.last_name, d.name AS department, r.title, r.salary, CONCAT_WS(" ", m.first_name, m.last_name) AS manager FROM employee e LEFT JOIN employee m ON m.id = e.manager_id INNER JOIN role r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id';
+    "SELECT e.id, e.first_name, e.last_name, r.title AS role, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS Manager FROM employee AS e LEFT JOIN role AS r ON e.role_id = r.id LEFT JOIN department AS d ON r.department_id = d.id LEFT JOIN employee AS m ON e.manager_id = m.id";
   connection.query(query, function (err, res) {
     if (err) throw err;
-    console.log(res.length + "workers found");
-    console.table("All employees:", res);
+    console.table("All Employees:", res);
     prompts();
   });
 }
+
+// function for all employees utilizing mysql 2 SELECT * FROM employeeand res.length
+//function viewEmployees() {
+//const query =
+//'SELECT e.id, e.first_name, e.last_name, d.name AS department, r.title, r.salary, CONCAT_WS(" ", m.first_name, m.last_name) AS manager FROM employee e LEFT JOIN employee m ON m.id = e.manager_id INNER JOIN role r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id';
+//connection.query(query, function (err, res) {
+//if (err) throw err;
+//console.log(res.length + "workers found");
+//console.table("All employees:", res);
+//prompts();
+//});
+//}
 
 function viewDepartments() {
   const query = "SELECT * FROM department";
@@ -104,15 +113,29 @@ function viewDepartments() {
   });
 }
 
+//function to view all roles and shows job title, role id, the department name, and the salary
 function viewRole() {
+  //select role.title, role.id, department.name, role.salary from role left join department on role.department_id = department.id;
   const query =
-    "SELECT  r.id, r.title, r.salary, d.name as Department_Name FROM role AS r INNER JOIN department AS d ON r.department_id = d.id";
+    "SELECT role.title, role.id AS role_id, department.name AS department, role.salary from role left join department on role.department_id = department.id";
   connection.query(query, function (err, res) {
     if (err) throw err;
     console.table("All Roles:", res);
     prompts();
   });
 }
+
+//function viewRole() {
+//const query =
+//"SELECT  r.id, r.title, r.salary, d.name as Department_Name FROM role AS r INNER JOIN department AS d ON r.department_id = d.id";
+//connection.query(query, function (err, res) {
+//if (err) throw err;
+//console.table("All Roles:", res);
+//prompts();
+//});
+//}
+
+//.promise() fun
 
 function addDepartment() {
   inquirer
@@ -137,7 +160,7 @@ function addDepartment() {
       });
     });
 }
-
+//this is the hard way. The easier way would be to use a .promise() function i did so on the updateemployee function wouldnt need to loop through the array
 function addRole() {
   connection.query("SELECT * FROM department", function (err, res) {
     if (err) throw err;
