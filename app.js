@@ -37,6 +37,7 @@ function prompts() {
                 'Add a department',
                 'Update employee role',
                 'Delete an employee',
+                'Delete a department',
                 'exit'
             ]
         })
@@ -63,13 +64,19 @@ function prompts() {
                 case 'exit':
                     endApplication();
                     break;
+                case 'Update employee role':
+                    updateEmployeeRole();
+                    break;
+                case 'Delete a department':
+                    deleteDepartment();
+                    break;
                 
             }
         })
 };
 // function for all employees utilizing mysql 2 SELECT * FROM employeeand res.length 
 function viewEmployees() {
-    const query = 'SELECT e.id, e.first_name, e.last_name, d.name AS department, r.title, r.salary, CONCAT_WS(" ", m.first_name, m.last_name) AS manager FROM employee e LEFT JOIN employee m ON m.id = e.manager_id INNER JOIN role r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id ORDER BY e.id ASC';
+    const query = 'SELECT e.id, e.first_name, e.last_name, d.name AS department, r.title, r.salary, CONCAT_WS(" ", m.first_name, m.last_name) AS manager FROM employee e LEFT JOIN employee m ON m.id = e.manager_id INNER JOIN role r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id';
     connection.query(query, function(err, res) {
         if (err) throw err;
         console.log(res.length + 'workers found');
@@ -231,10 +238,114 @@ function addEmployee() {
 };
 
 
+//function to update employee role and updates the database
+function updateEmployeeRole() {
+    connection.query('SELECT * FROM employee', function (err, res) {
+        if (err) throw err;
+        inquirer
+            .prompt([
+                {
+                    name: 'employee',
+                    type: 'list',
+                    choices: function() {
+                        let employeeData = [];
+                        for (let i = 0; i < res.length; i++) {
+                            employeeData.push(res[i].first_name + ' ' + res[i].last_name);
+                        }
+                        return employeeData;
+                    },
+                    message: 'Which employee do you want to update?'
+                },
+                {
+                    name: 'role',
+                    type: 'list',
+                    choices: function() {
+                        let roleData = [];
+                        for (let i = 0; i < res.length; i++) {
+                            roleData.push(res[i].title);
+                        }
+                        return roleData;
+                    },
+                    message: 'What is the new role?'
+                }
+            ])
+            .then(function (selected) {
+                let employee_id;
+                for (let x = 0; x < res.length; x++) {
+                    if (res[x].first_name + ' ' + res[x].last_name == selected.employee) {
+                        employee_id = res[x].id;
+                    }
+                }
+                let role_id;
+                for (let x = 0; x < res.length; x++) {
+                    if (res[x].title == selected.role) {
+                        role_id = res[x].id;
+                    }
+                }
+                connection.query(
+                    'UPDATE employee SET ? WHERE ?',
+                    [
+                        {
+                            role_id: role_id
+                        },
+                        {
+                            id: employee_id
+                        }
+                    ],
+                    function (err) {
+                        if (err) throw err;
+                        console.log('Employee role updated!');
+                        prompts();
+                        
+                    }
+                )
+            })
+    })
+};
+
+//function to delete a department from database
+function deleteDepartment() {
+    connection.query('SELECT * FROM department', function (err, res) {
+        if (err) throw err;
+        inquirer
+            .prompt([
+                {
+                    name: 'department',
+                    type: 'list',
+                    choices: function() {
+                        let departmentData = [];
+                        for (let i = 0; i < res.length; i++) {
+                            departmentData.push(res[i].name);
+                        }
+                        return departmentData;
+                    },
+                    message: 'Which department would you like to delete?'
+                }
+            ])
+            .then(function (selected) {
+                let department_id;
+                for (let x = 0; x < res.length; x++) {
+                    if (res[x].name == selected.department) {
+                        department_id = res[x].id;
+                    }
+                }
+                connection.query(
+                    'DELETE FROM department WHERE ?',
+                    {
+                        id: department_id
+                    },
+                    function (err) {
+                        if (err) throw err;
+                        console.log('Department deleted!');
+                        prompts();
+                    }
+                )
+            })
+    })
+};
 
 
-
-
+                
 
 
 

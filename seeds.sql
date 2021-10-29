@@ -31,4 +31,13 @@ VALUES
 ('Henry', 'Sainz', 7, 106);
 
 SELECT e.id, e.first_name, e.last_name, d.name AS department, r.title, r.salary, CONCAT_WS(" ", m.first_name, m.last_name) AS manager FROM employee e LEFT JOIN employee m ON m.id = e.manager_id INNER JOIN role r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id ORDER BY e.id ASC;
-SELECT r.id, r.title, r.salary, d.name AS Department_Name FROM role AS r INNER JOIN department AS d ON r.department_id = d.id;
+
+SELECT  r.id, r.title, r.salary, d.name as Department_Name FROM role AS r INNER JOIN department AS d ON r.department_id = d.id;
+
+-- SELECT a.id, a.first_name, a.last_name, a.role_id, a.manager_id, r.title, r.salary, d.name AS department, CONCAT_WS(" ", m.first_name, m.last_name) AS manager FROM employee AS a LEFT JOIN employee AS m ON m.id = a.manager_id INNER JOIN role AS r ON a.role_id = r.id INNER JOIN department AS d ON r.department_id = d.id ORDER BY a.id ASC;
+SELECT a.id, a.first_name, a.last_name, a.role, a.manager_id, r.title, r.salary, d.name AS department, CONCAT_WS(" ", m.first_name, m.last_name) AS manager FROM employee AS a LEFT JOIN employee AS m ON m.id = a.manager_id INNER JOIN role AS r ON a.role_id = r.id INNER JOIN department AS d ON r.department_id = d.id ORDER BY a.id ASC;
+
+SELECT id, CONCAT_WS(' ', first_name, last_name) AS Employee_Name FROM employee
+
+
+
