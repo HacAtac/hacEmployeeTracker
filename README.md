@@ -1,7 +1,7 @@
 <h1>hacEmployeeTracker App!</h1>
 
 <h2>Description</h2>
-  <p> Dealing with node, npm packages, mysql2, inquirer, console.table this has taught me a ton and looking forward to learning more about this! </p>
+  <p> Dealing with node, npm packages, mysql2, inquirer, console.table I've made a content management system(CMS) that allows users/companies to manage their database of workers and work flow. This has taught me a ton and looking forward to learning more about this! </p>
 
   <ul>
     <li>First I formated the file structure.</li>
