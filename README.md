@@ -16,8 +16,8 @@
 
 <a href ="https://github.com/HacAtac/hacEmployeeTracker" target="_blank">Link to my git hub application.</a></br>
 
-<a href ="" target="_blank">Link to screen castify walkthrough vid.</a></br>
+<a href ="https://watch.screencastify.com/v/qRwBBmEJYXPRyPfbVsKU" target="_blank">Link to screen castify walkthrough vid.</a></br>
 
-<h3>Screenshot of deployed app!</h3>
+<h3>Screenshot of app!</h3>
 
 ![image](https://user-images.githubusercontent.com/87215152/139605012-9fcbdc2c-cac5-4531-a72c-05126b82e962.png)
