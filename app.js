@@ -36,6 +36,7 @@ function prompts() {
         "Delete a department",
         "Delete a role",
         "View department budget",
+        "View employee manager",
         "exit",
       ],
     })
@@ -77,6 +78,9 @@ function prompts() {
         case "View department budget":
           viewBudget();
           break;
+        case "View employee manager":
+          viewEmployeeManager();
+          break;
       }
     });
 }
@@ -91,6 +95,19 @@ function viewEmployees() {
     prompts();
   });
 }
+
+// function to show what manager each employee has
+//function viewEmployeeManager() {
+//const query =
+//"SELECT e.id, e.first_name, e.last_name, CONCAT(m.first_name, ' ', m.last_name) AS Manager FROM employee AS e LEFT JOIN employee AS m ON e.manager_id = m.id";
+//connection.query(query, function (err, res) {
+//if (err) throw err;
+//console.table("All Employees:", res);
+//prompts();
+//});
+//}
+
+// assign manager roles to
 
 // function for all employees utilizing mysql 2 SELECT * FROM employeeand res.length
 //function viewEmployees() {
@@ -494,7 +511,7 @@ function viewBudget() {
   });
 }
 
-//v
+//router
 
 function endApplication() {
   connection.end();
